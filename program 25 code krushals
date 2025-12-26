@@ -1,0 +1,44 @@
+#include <stdio.h>
+int parent[10];
+int find(int i) {
+    while (parent[i])
+        i = parent[i];
+    return i;
+}
+void unionSet(int i, int j) {
+    parent[j] = i;
+}
+int main() {
+    int n, cost[10][10];
+    int edges = 0, min, u, v, totalCost = 0;
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+    printf("Enter adjacency matrix:\n");
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            scanf("%d", &cost[i][j]);
+    printf("\nEdges in MST:\n");
+    while (edges < n - 1) {
+        min = 999;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (cost[i][j] && cost[i][j] < min) {
+                    min = cost[i][j];
+                    u = i;
+                    v = j;
+                }
+            }
+        }
+        int a = find(u);
+        int b = find(v);
+        if (a != b) {
+            printf("%d - %d : %d\n", u, v, min);
+            totalCost += min;
+            unionSet(a, b);
+            edges++;
+        }
+        cost[u][v] = cost[v][u] = 999;
+    }
+    printf("Total cost of MST = %d\n", totalCost);
+    return 0;
+}
